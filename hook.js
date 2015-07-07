@@ -3,6 +3,7 @@
 var github = require('octonode');
 var path = require('path');
 var Q = require('q');
+var RateLimiter = require('limiter').RateLimiter;
 
 var commenter = require('./commenter');
 var diff = require('./diffParse');
@@ -11,7 +12,7 @@ var processor = require('./processor');
 var utils = require('./utils');
 
 var configFilename = '.doiuse';
-var githubClient = github.client();
+var githubClient = github.client(process.env.OAUTH_TOKEN);
 
 /**
  * Handle requests to /hook.
@@ -61,7 +62,11 @@ function processPullRequest(destinationRepo, originRepo, originBranch, prNumber,
                 function handleIncompatibility(incompatibility) {
                     var line = diff.lineToIndex(file.patch, incompatibility.usage.source.start.line);
                     var comment = incompatibility.featureData.title + ' not supported by: ' + incompatibility.featureData.missing;
-                    commenter.postPullRequestComment(commentURL, comment, file.filename, currentCommit.sha, line);
+
+                    var ran = Math.random() * (100000 - 10000) + 10000;
+                    setTimeout(function() {
+                        commenter.postPullRequestComment(commentURL, comment, file.filename, currentCommit.sha, line);
+                    }, ran);
                 }
 
                 // Test and report on this file if it's a stylesheet

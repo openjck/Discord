@@ -5,10 +5,12 @@ var beautify = require('gulp-jsbeautifier');
 var jshint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
 
+var js = ['*.js', '*/*.js'];
+
 gulp.task('beautify', ['beautify:javascript']);
 
 gulp.task('beautify:javascript', function() {
-    gulp.src(['*.js', '*.json']).pipe(beautify({
+    gulp.src(js.concat(['*.json'])).pipe(beautify({
         indentSize: 4,
         keepFunctionIndentation: true
     })).pipe(gulp.dest('./'));
@@ -17,7 +19,7 @@ gulp.task('beautify:javascript', function() {
 gulp.task('test', ['test:jshint', 'test:mocha']);
 
 gulp.task('test:jshint', function() {
-    gulp.src('*.js')
+    gulp.src(js)
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
@@ -26,5 +28,9 @@ gulp.task('test:mocha', function() {
     // The two `once` functions have been added because the gulp process
     // doesn't always finish if there's an error or feedback condition:
     // https://www.npmjs.com/package/gulp-mocha#test-suite-not-exiting
-    gulp.src('tests/tests.js').pipe(mocha());
+    gulp.src('tests/tests.js')
+        .pipe(mocha())
+        .once('end', function() {
+            process.exit();
+        });
 });

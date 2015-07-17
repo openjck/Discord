@@ -1,14 +1,17 @@
 'use strict';
 
+var express = require('express');
+var router = express.Router();
+
 var github = require('octonode');
 var Q = require('q');
 
-var commenter = require('./commenter');
-var diff = require('./diffParse');
-var logger = require('./logger');
-var processor = require('./processor');
-var utils = require('./utils');
-var config = require('./config');
+var commenter = require('../includes/commenter');
+var diff = require('../includes/diffParse');
+var logger = require('../includes/logger');
+var processor = require('../includes/processor');
+var utils = require('../includes/utils');
+var config = require('../includes/config');
 
 var configFilename = '.doiuse';
 var githubClient = github.client(config.token);
@@ -16,7 +19,7 @@ var githubClient = github.client(config.token);
 /**
  * Handle requests to /hook.
  */
-function handle(request, response) {
+router.post('/', function(request, response) {
     var eventType = request.headers['x-github-event'];
     var metadata = request.body;
     var pr = metadata.pull_request;
@@ -38,7 +41,7 @@ function handle(request, response) {
     } else {
         logger.info('Invalid event type (', eventType, ') requested by:', originRepo);
     }
-}
+});
 
 /**
  * React to a new pull request. Go through all changes to stylesheets, test
@@ -138,4 +141,4 @@ function getCommitDetail(repo, sha) {
     return deferred.promise;
 }
 
-exports.handle = handle;
+module.exports = router;

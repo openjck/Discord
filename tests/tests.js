@@ -23,7 +23,7 @@ var request = require('request');
 var nock = require('nock');
 var assert = chai.assert;
 
-var config = require('../config');
+var config = require('../lib/config');
 var www = require('../bin/www');
 
 var appHost = [config.protocol, '//', config.host, ':', config.port].join('');

@@ -3,7 +3,6 @@
     "main": "app.js",
     "private": true,
     "scripts": {
-        "postinstall": "./gulp --gulpfile gulpfile-prod.js build",
         "test": "./gulp test"
     },
     "engines": {

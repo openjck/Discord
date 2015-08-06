@@ -1,9 +1,5 @@
 'use strict';
 
-// This value is read in config.js, so it needs to be set before the file is
-// loaded anywhere.
-process.env.NODE_ENV = 'test';
-
 // Process Redis tasks
 require('../worker');
 
@@ -19,10 +15,6 @@ var config = require('../lib/config');
 var www = require('../bin/www');
 
 var notFoundURL = testUtils.appHost + '/page-that-will-never-exist';
-
-// Announce that automated tests are being run just in case other parts of the
-// application want to behave differently
-
 
 describe('Discord Tests', function() {
 

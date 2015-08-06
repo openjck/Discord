@@ -1,10 +1,15 @@
 'use strict';
 
+var config = require('../lib/config');
+
 var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(module.filename);
-var sequelize = new Sequelize(process.env.DATABASE_URL);
+var sequelize = new Sequelize(config('databaseURL'), {
+    logging: process.env.NODE_ENV !== 'test'
+});
+
 var db = {};
 
 fs
